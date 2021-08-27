@@ -1,20 +1,15 @@
 #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <stdbool.h>
+#include "read_csv.h"
+#define LEN_STR_FILE 40
+
 
 int main() {
-    int menuNum;
-
-    do {
-        scanf("%d", &menuNum);
-        switch (menuNum) {
-            case 1:
-
-                break;
-            case 2:
-                break;
-            case 3:
-                break;
-        }
-    } while (menuNum != 0);
-
+    char nomearquivo[LEN_STR_FILE];
+    scanf("%s",nomearquivo);
+    FILE* pFileName = Open_file_read(nomearquivo);
+    bool flag = Separa_por_nota(pFileName);
     return 0;
 }
