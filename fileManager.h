@@ -11,6 +11,12 @@ FILE *writeFile(char *filename);
 
 int isNumber(char c);
 
+int isEndWord(char c);
+
+int countWordCharInFile(FILE *fileName);
+
+int checkForRepeatedWords(char *word, char*wordArray); 
+
 int sortByRating(FILE *Reviews, FILE *Nota1, FILE *Nota2, FILE *Nota3, FILE *Nota4, FILE *Nota5);
 
 #endif //EDA_TP1_FILEMANAGER_H

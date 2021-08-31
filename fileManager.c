@@ -20,6 +20,64 @@ int isNumber(char c) {
     return 0;
 }
 
+int isEndWord(char c){
+    int isEnd = 0, i;
+    char ends[6] = {' ', ',', ';', '\n', '.', ':'};
+    for(i = 0; i<6; i++){
+        if(c == ends[i]){
+            isEnd = 1;
+            break;
+        }
+    }
+    return isEnd;
+}
+
+int countWordCharInFile(FILE *fileName) {
+    int count = 0, i;
+    char word[30], c;
+
+    while((c = fgetc(fileName)) != EOF){
+
+        if(!isEndWord(c)) {
+        i = 0;
+
+        while(!isEndWord(c)) {
+                word[i] = c;
+                c = fgetc(fileName);
+                i++;
+            }
+
+            if(i > 3) {
+                i ++;
+                count = count + i;
+            }
+        } 
+    }
+    return count;
+}
+
+int checkForRepeatedWords(char *word, char*wordArray ){
+    int i = 0, j, wordLen, isEqual = 0; 
+        wordLen = strlen(word);
+        //printf("%s", wordArray);
+        //printf("%s", word);
+
+        while(wordArray[i] != '\0') {
+            j = 0;
+            do {
+                if(wordArray[i] == word[j]) 
+                    isEqual++;
+                
+                if(isEqual == wordLen)
+                    return 1;
+                j++, i++;
+            } while(wordArray[i] != ' '); 
+            i++;
+        }
+
+    return 0;
+}
+
 int sortByRating(FILE *Reviews, FILE *Nota1, FILE *Nota2, FILE *Nota3, FILE *Nota4, FILE *Nota5) {
     char buff[20000], c;
     int i;
@@ -30,9 +88,9 @@ int sortByRating(FILE *Reviews, FILE *Nota1, FILE *Nota2, FILE *Nota3, FILE *Not
             memset(buff, 0, 20000);
             c = fgetc(Reviews);
             i = 0;
-            while (c != '"') {
-                buff[i] = c;
-                c = fgetc(Reviews);
+            while (c != '"') { //le todos os caracteres entre aspas
+                buff[i] = c;   // adiciona o caracter do arquivo a um vetor
+                c = fgetc(Reviews); // passa para o proximo caracter
                 i++;
             }
             buff[i] = '\n';
@@ -58,7 +116,7 @@ int sortByRating(FILE *Reviews, FILE *Nota1, FILE *Nota2, FILE *Nota3, FILE *Not
                 break;
         }
 
-        c = fgetc(Reviews);
+        c = fgetc(Reviews); //anda para o proximo caractere
     }
     memset(buff, 0, 20000);
     return 0;
