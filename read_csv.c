@@ -56,8 +56,14 @@ bool Write_txt_files(char* Text, char Num_file){
     FILE* pTxtFiles;
     pTxtFiles = Open_file_write(file_txt_name);
     
-    fprintf(pTxtFiles,"%s",Text);
+    fprintf(pTxtFiles,"%s\n",Text);
     //fwrite(Text,sizeof(char),strlen(Text),pTxtFiles);
     fclose(pTxtFiles);
     return true;
+}
+
+int ReadFile(FILE* file_name, char* pword){    
+    if(fscanf(file_name,"%s",pword) < 1)
+        return 0;
+    return 1;
 }
