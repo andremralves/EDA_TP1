@@ -1,6 +1,6 @@
 #ifndef GEN_VECTOR_H
 #define GEN_VECTOR_H
-  
+
 struct word{
   char* word;
   int num;
