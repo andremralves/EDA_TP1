@@ -107,4 +107,3 @@ int FinPos(Word* source, int* max_len_vetor,char* element)
     else
         return mid + 1; // significa que a palavra é maior que a palavra encontra na ultima iteração portanto deve retornar posição+1
 }
-
