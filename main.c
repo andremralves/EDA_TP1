@@ -7,40 +7,59 @@
 #include "string_manipulation.h"
 #define LEN_STR_FILE 40
 
-int main() {
-
+struct words_by_rating{
     Word* words;
-    char* pword, *file_name;
-    FILE* pFileName; 
-    int valor = GenFiles(pFileName);
-    file_name = "Nota1.txt";
+    int len_vetctor;
+    int LEN_WORD_TEXT;
+};
+typedef struct words_by_rating WBRating;
+
+int main() {
+    
+    // atribuiçao de variaveis
+    //
+    WBRating* VSB_rating; // vetor de strings pela nota
+    MAN_String* vector_string; // vetor de strings tratadas
+    int FLAG_GEN_FILE, FLAG_READ_FILE, MAX_LEN_VECTOR, LEN_QUEUE;
+    VSB_rating = NULL;
+    vector_string = NULL;
+    char *pword; // ponteiro para palavras recebidas da leitura do arquivo
+    FILE* pFileName = NULL; 
+    char *file_name = "Nota1.txt"; // nome generico para Nome de arquivos de texto por nota
+    char opt = '0'; // opção do menu
+    MAX_LEN_VECTOR = 0; // tamanho maximo do meu vetor inicia em 0
+    LEN_QUEUE = 0; // tamanho do vetor de retorno tratadas
+    
+    // Alocação 
+    
+    VSB_rating = (WBRating*)calloc(5,sizeof(WBRating));
+    //Word* words;
+    FLAG_GEN_FILE = GenFiles(pFileName);
     pFileName = OpenFileRead(file_name);
     
-    int flag2, max_len_vetor = 0, lenvet = 0, aux = 0;
-    MAN_String* vector_string;
     
     while(1)
     {
-        flag2 = ReadFile(pFileName,pword);
+        FLAG_READ_FILE = ReadFile(pFileName,pword);
         if(feof(pFileName))
             break;
         else{
-            vector_string = SplitWords(vector_string,pword,&lenvet);
-            for(int i = 0; i <= lenvet; i++){
-                aux++;
+            vector_string = SplitWords(vector_string,pword,&LEN_QUEUE);
+            for(int i = 0; i <= LEN_QUEUE; i++){
+                VSB_rating[0].LEN_WORD_TEXT++;
                 if(strlen(vector_string[i].word) > 3)
-                    words = InsertSort(words, &max_len_vetor,vector_string[i].word);   
+                    VSB_rating[0].words = InsertSort(VSB_rating[0].words, &VSB_rating[0].len_vetctor, vector_string[i].word);   
                 else
                     continue;
             }
-            lenvet = 0;
+            LEN_QUEUE = 0;
         }
     }
     fclose(pFileName);
-    for(int i = 0; i < max_len_vetor; i++){
-        printf("palavra: %s  |  numero de vezes: %i\n",words[i].word, words[i].num);
+    for(int i = 0; i < VSB_rating[0].len_vetctor; i++){
+        printf("palavra: %s  |  numero de vezes: %i\n",VSB_rating[0].words[i].word, VSB_rating[0].words[i].num);
     }
-    printf("%i\n%i\n",max_len_vetor,aux);
-    FreeVector(words,max_len_vetor); 
+    printf("%i\n%i\n",VSB_rating[0].len_vetctor,VSB_rating[0].LEN_WORD_TEXT);
+    FreeVector(VSB_rating[0].words,VSB_rating[0].len_vetctor); 
     return 0;
 }
