@@ -2,27 +2,19 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdbool.h>
-#include "read_csv.h"
+#include "MAN_csv.h"
 #include "gen_vector.h"
 #include "string_manipulation.h"
 #define LEN_STR_FILE 40
 
-int func(){
-    
-
-
-}
 int main() {
 
     Word* words;
     char* pword, *file_name;
     FILE* pFileName; 
-    //scanf("%s",file_name);
-    //pFileName = Open_file_read(file_name);
-    //bool flag = Separa_por_nota(pFileName);  
-    
+    int valor = GenFiles(pFileName);
     file_name = "Nota1.txt";
-    pFileName = Open_file_read(file_name);
+    pFileName = OpenFileRead(file_name);
     
     int flag2, max_len_vetor = 0, lenvet = 0, aux = 0;
     MAN_String* vector_string;
