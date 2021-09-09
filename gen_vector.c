@@ -1,4 +1,6 @@
 #include "gen_vector.h"
+#include "string_manipulation.h"
+#include "MAN_csv.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -14,8 +16,8 @@ void VerifyAllocation(void* pointer)
 
 void FreeVector(Word* vector, int len_vector)
 {
-    for(int i = 0; i > len_vector; i++)
-        free(vector[i].word); // libera todos os char* do vetor de origem
+    for(int index = 0; index < len_vector; index++)
+        free(vector[index].word); // libera todos os char* do vetor de origem
     free(vector); // libera o vetor de origem
 }
 
@@ -106,4 +108,29 @@ int FinPos(Word* source, int* max_len_vetor,char* element)
         return mid; // retorna a posição que deve ser inserida
     else
         return mid + 1; // significa que a palavra é maior que a palavra encontra na ultima iteração portanto deve retornar posição+1
+}
+
+Word* GenVector(Word* source, FILE* pFileName, int *len_source, int* LEN_WORD_TEXT)
+{
+    MAN_String* vector_string;
+    int LEN_QUEUE = 0;
+    char* pword;
+    vector_string = NULL;
+    while(1)
+    {
+        if(!ReadFile(pFileName,pword) || feof(pFileName))
+            break;
+        else{
+            vector_string = SplitWords(vector_string, pword, &LEN_QUEUE);
+            LEN_WORD_TEXT++;
+            for(int index = 0; index <= LEN_QUEUE; index++){
+                if(strlen(vector_string[index].word) > 3)    
+                    source = InsertSort(source, len_source, vector_string[index].word);
+                else
+                    continue;
+            }
+            LEN_QUEUE = 0;
+        }
+    }
+    return source;
 }
