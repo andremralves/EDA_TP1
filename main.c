@@ -13,7 +13,7 @@ int main()
 {
     // atribuiçao de variaveis
     //
-    Word* recebe;
+    Word** recebe;
     MAN_String* vector_string = NULL; // vetor de strings tratadas
     MAN_String* file_names;
     FILE* pFileName = NULL; 
@@ -26,7 +26,12 @@ int main()
 
     // Alocação 
     
-    recebe = (Word*)calloc(1,sizeof(Word));
+    recebe = (Word**)malloc(5*sizeof(Word*));
+    
+    for(int index = 0; index < 5; index++){
+        recebe[index] = (Word*)malloc(1* sizeof(Word));
+    }
+
     file_names = (MAN_String*)malloc(5*sizeof(MAN_String));
     
     file_names[0].word = "Nota1.txt";
@@ -51,10 +56,9 @@ int main()
 
             case 'G':
 
-                printf("Essa Opção irá apagar o arquivos de Avaliação caso eles já existão,\n(OBS: apagar os arquivos e reescreve-los pode afetar a integridade\ndo funcionamento do programa.\nDeseja continuar? [Y/N:])");
+                printf("Essa Opção irá apagar o arquivos de Avaliação caso eles já existão,\n(OBS: apagar os arquivos e reescreve-los pode afetar a integridade\ndo funcionamento do programa.\nDeseja continuar? [Y/N:]");
                 setbuf(stdin,NULL);
                 char opt_tmp;
-                int LEN_WORD_TEXT[5] = {0,0,0,0,0};
                 scanf("%c",&opt_tmp);
                 if(opt_tmp == 'Y' || opt_tmp == 'y'){
                     DelFiles(); 
@@ -69,18 +73,37 @@ int main()
                 break;
 
             case 'C':
-
-                pFileName = OpenFileRead(file_names[2].word);    
-                recebe = GenVector(recebe, pFileName, &MAX_LEN_VET[0] , &LEN_WORD_TEXT[0]);
-                fclose(pFileName);
+                
+                for(int index = 0; index < 3; index++){
+                    pFileName = OpenFileRead(file_names[index].word);    
+                    recebe[index] = GenVector(recebe[index], pFileName, &MAX_LEN_VET[index] , &LEN_WORD_TEXT[index]);
+                    fclose(pFileName);
+                }
                 break;
-                    
+
+            case 'M':
+
+                printf("\n\n");
+                if(MAX_LEN_VET[1]  == 0){
+                    printf("Gere os vetores primeiro!!\n");
+                    break;
+                }
+                else
+                    for(int index = 0; index < 3; index++)
+                        printf("%s => Palavras diferentes: %i\n",file_names[index].word, MAX_LEN_VET[index]);
+                break;
+
             case 'S':
                 break;
                 
         }
     }
-    printf("%i\n",MAX_LEN_VET[0]);
-    FreeVector(recebe,MAX_LEN_VET[0]); 
+
+    for(int index = 0; index < 3; index++){
+        FreeVector(recebe[index],MAX_LEN_VET[index]);
+        free(vector_string[index].word);
+    }
+    
+    free(vector_string);
     return 0;
 }

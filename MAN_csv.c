@@ -23,16 +23,15 @@ int ReadFile(FILE* file_name, char* pword){
 void DelFiles(void){
     char generic_name_file[9] = {"Nota*.txt"};
     char number_txt_files[5] = {'1','2','3','4','5'};
-    int FLAG_DELETE_FILE;
     for(int index = 0; index < 5; index++){
         generic_name_file[4] = number_txt_files[index];
-        FLAG_DELETE_FILE = remove(generic_name_file);
-        if(FLAG_DELETE_FILE)
+        if(!remove(generic_name_file))
             printf("%s Deletado com sucesso\n",generic_name_file);
         else
             printf("%s não esta no diretorio ou não encontrado\n",generic_name_file);
     }
 }
+
 bool WriteTxtFiles(char* Text, char Num_file){
     char file_txt_name[9] = {"Nota*.txt"}; // estruruta generica do tipo do nome dos arquivos gerados
     FILE *pTxtFiles = NULL;
