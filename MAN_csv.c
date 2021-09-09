@@ -81,11 +81,11 @@ int GenFiles(FILE* pFileName) {
 
     pFileName = OpenFileRead(file_name); // abre p arquivo para leitura
     if(pFileName == NULL){
-        printf("não foi possivel abrir o arquivo CSV para leitura\n"); 
+        printf("Não foi possivel abrir o arquivo CSV para leitura\n"); 
         return  1;
     }
     if(!SplitByRate(pFileName)){  // ler e escevre os texto nos respectivos arquivos .txt
-        printf("não foi possivel escrever nos arquivos de texto\n");
+        printf("Não foi possivel escrever nos arquivos de texto\n");
         return 1;
     }
     return 0;
