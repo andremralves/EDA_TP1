@@ -2,9 +2,9 @@
 #include <stdlib.h>
 #include <string.h>
 
-int menu(){
+int menu(){//a função menu é chamada no início do código
+    
     int MenuOption;
-
     printf("\n==================== M E N U ====================\n\n"
            "                   Selecione...                    \n\n"
            "1 - Para ler um database do Trip Advisor             \n"
@@ -15,21 +15,22 @@ int menu(){
 
     scanf("%d", &MenuOption);
     printf("\n");
-    return MenuOption;
+    return MenuOption;//lê opção MenuOption e envia de volta pra main
 }
-int OrganizeDB(){
+int OrganizeDB(){//função responsável por ler o arquivo base e criar os arquivos de notas respectivos
     FILE *Input = NULL;
     FILE *Nota1 = NULL;
     FILE *Nota2 = NULL;
     FILE *Nota3 = NULL;
     FILE *Nota4 = NULL;
     FILE *Nota5 = NULL;
-    
     char File[30];
+    
     printf("\nInsira o nome do arquivo desejado: ");
     scanf("%s", File);
-    Input = fopen(File, "r");
     
+    Input = fopen(File, "r");//leitura do arquivo base
+    //validar arquivo
     if(Input == NULL){
         printf("Arquivo %s invalido!\nTente novamente!\n", File);
         return 0;
@@ -37,6 +38,7 @@ int OrganizeDB(){
         printf("\nArquivo %s validado com sucesso!\n\n", File);
         printf("Analisando arquivo...\n");
     }
+    //passo de criação de arquivos
     char reader, Comment[20000];
     int i;
     reader = fgetc(Input + '\n');
@@ -101,7 +103,7 @@ int OrganizeDB(){
     reader = NULL;
     return 0;
 }
-int Vocabulary(){
+int Vocabulary(){//recebe o arquivo para analise do usuario e realiza leitura
     int txtOption;
     FILE *Nota = NULL;
     printf("                                                \n"
@@ -134,6 +136,7 @@ int Vocabulary(){
             printf("Valor invalido!\nTente novamente!\n");
             break;
     }
+    //validação de arquivo
     if(Nota == NULL){
         printf("\nArquivo txt não encontrado!\nVerifique se o arquivo esta disponivel\n");
     }
@@ -141,35 +144,39 @@ int Vocabulary(){
         printf("\nPreparando arquivo Nota%d.txt para analise...\n", txtOption);
         printf("Gerando vocabulario...\n\n");
     }
+    
     char reader, MainWord[50];
     int c, words = 0;
     FILE *CV = NULL;
     CV = fopen("CompareVocabulary.txt", "w");
     reader = fgetc(Nota);
-    while(!feof(Nota)){
+    
+    while(!feof(Nota)){//assegura que a palavra APENAS será uma letra do alfabeto
         memset(MainWord, 0, 50);
         if(reader == 'A' || reader == 'B' || reader == 'C' || reader == 'D' || reader == 'E' || reader == 'F' || reader == 'G' || reader == 'H' || reader == 'I' || reader == 'J' || reader == 'K' || reader == 'L' || reader == 'M' || reader == 'N' || reader == 'O' || reader == 'P' || reader == 'Q' || reader == 'R' || reader == 'S' || reader == 'T' || reader == 'U' || reader == 'V' || reader == 'W' ||reader == 'X' || reader == 'Y' || reader == 'Z' || reader == 'a' || reader == 'b' || reader == 'c' || reader == 'd' || reader == 'e' || reader == 'f' || reader == 'g' || reader == 'h' || reader == 'i' || reader == 'j' || reader == 'k' || reader == 'l' || reader == 'm' || reader == 'n' || reader == 'o' || reader == 'p' || reader == 'q' || reader == 'r' || reader == 's' || reader == 't' || reader == 'u' || reader == 'v' || reader == 'w' || reader == 'x' || reader == 'y' || reader == 'z'){     
             c = 0;
+            //a leitura prossede até o leitor indentificar um caracter diferente do alfabeto
             while(reader == 'A' || reader == 'B' || reader == 'C' || reader == 'D' || reader == 'E' || reader == 'F' || reader == 'G' || reader == 'H' || reader == 'I' || reader == 'J' || reader == 'K' || reader == 'L' || reader == 'M' || reader == 'N' || reader == 'O' || reader == 'P' || reader == 'Q' || reader == 'R' || reader == 'S' || reader == 'T' || reader == 'U' || reader == 'V' || reader == 'W' ||reader == 'X' || reader == 'Y' || reader == 'Z' || reader == 'a' || reader == 'b' || reader == 'c' || reader == 'd' || reader == 'e' || reader == 'f' || reader == 'g' || reader == 'h' || reader == 'i' || reader == 'j' || reader == 'k' || reader == 'l' || reader == 'm' || reader == 'n' || reader == 'o' || reader == 'p' || reader == 'q' || reader == 'r' || reader == 's' || reader == 't' || reader == 'u' || reader == 'v' || reader == 'w' || reader == 'x' || reader == 'y' || reader == 'z'){
+                //salva a palavra no vetor MainWord
                 MainWord[c] = reader;
                 reader = fgetc(Nota);
                 c++;
             }
-            if(c < 3){
+            if(c < 3){//se a palavra for menor que 3 caracteres, descarte
                 memset(MainWord, 0, 50);
                 c = 0;
             }
-            else{
+            else{//se a palavra for maior que 3 caracteres, salve no arquivo CompareVocabulary.txt
                 MainWord[c] = '\n';
-                printf("%s", MainWord);
+                printf("%s", MainWord);//print apenas pra ter certeza que o programa tá fazendo o que deveria
                 fputs(MainWord, CV);
-                words++;
+                words++;//contador de palavras
             }
         }
         reader = fgetc(Nota);
     }
-    printf("\n%d palavras\n\n", words);
-    printf("Arquivo 'CompareVocabulary.txt' criado!\n\n"); 
+    printf("\n%d palavras\n\n", words);//numero de palavras
+    printf("Arquivo 'CompareVocabulary.txt' criado!\n\n");//confirma que o processo foi realizado
 
     fclose(Nota);
     return 0;
