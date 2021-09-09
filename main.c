@@ -58,10 +58,10 @@ int main() {
                 sortByRating(Reviews, Nota1, Nota2, Nota3, Nota4, Nota5);
                 break;
             case 2:
-                char c;
+                /*char c;
                 char word[100];
                 int i, count = 0;
-                long int filePos;
+                long int filePos;*/
 
                 if(Reviews != NULL) 
                     fclose(Reviews);
