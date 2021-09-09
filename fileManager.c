@@ -1,6 +1,6 @@
-//
-// Created by andre on 24/08/2021.
-//
+    //
+    // Created by andre on 24/08/2021.
+    //
 #include <stdio.h>
 #include <string.h>
 #include "fileManager.h"
@@ -22,8 +22,8 @@ int isNumber(char c) {
 
 int isEndWord(char c){
     int isEnd = 0, i;
-    char ends[6] = {' ', ',', ';', '\n', '.', ':'};
-    for(i = 0; i<6; i++){
+    char ends[8] = {' ', ',', ';', '\n', '.', ':', '\\', '/'};
+    for(i = 0; i<8; i++){
         if(c == ends[i]){
             isEnd = 1;
             break;
@@ -32,16 +32,16 @@ int isEndWord(char c){
     return isEnd;
 }
 
-int countWordCharInFile(FILE *fileName) {
+int countCharsInFile(FILE *fileName) {
     int count = 0, i;
     char word[30], c;
 
     while((c = fgetc(fileName)) != EOF){
 
         if(!isEndWord(c)) {
-        i = 0;
+            i = 0;
 
-        while(!isEndWord(c)) {
+            while(!isEndWord(c)) {
                 word[i] = c;
                 c = fgetc(fileName);
                 i++;
@@ -56,25 +56,103 @@ int countWordCharInFile(FILE *fileName) {
     return count;
 }
 
-int checkForRepeatedWords(char *word, char*wordArray ){
-    int i = 0, j, wordLen, isEqual = 0; 
-        wordLen = strlen(word);
-        //printf("%s", wordArray);
-        //printf("%s", word);
-
-        while(wordArray[i] != '\0') {
-            j = 0;
-            do {
-                if(wordArray[i] == word[j]) 
-                    isEqual++;
-                
-                if(isEqual == wordLen)
-                    return 1;
-                j++, i++;
-            } while(wordArray[i] != ' '); 
+int wordCountInFile(char *word, FILE *fp) {
+    int count = 0, i;
+    char wordInFile[100], c;
+    
+    fseek(fp, 0, SEEK_SET);
+    while((c = fgetc(fp)) != EOF) {
+        i = 0;
+        
+        while(!isEndWord(c)) {
+            wordInFile[i] = c;
+            c = fgetc(fp);
             i++;
         }
 
+        if(strcmp(word, wordInFile) == 0)
+            count++;
+
+        memset(wordInFile, 0, 100);
+    }
+    //if(count > 0)
+    //    printf("%d ", count); 
+    return count;
+}
+
+int numberOfWordsInFile(FILE *fp) {
+    int count = 1;
+    char c;
+
+    fseek(fp, 0, SEEK_SET);
+    while((c = fgetc(fp)) != EOF) {
+        if(isEndWord(c))
+            count++;
+    }
+    return count;
+}
+
+int checkForRepeatedWords(char *word, FILE *fp, long int wordPosition){
+    char c, word2[50];
+    int i;
+   
+    //printf("%s\n", word); 
+    fseek(fp, 0, SEEK_SET); 
+    //printf("%ld\n", ftell(fp));
+    //printf("%ld\n", wordPosition);
+    c = fgetc(fp);
+    //printf("%c\n", c);
+    while(ftell(fp) <  wordPosition) {
+        //printf("%c", c);
+        //printf("%ld ", ftell(fp));
+        if(c == '"') {
+            while((c = fgetc(fp)) != '"') {
+                i = 0;
+                while(!isEndWord(c)) {
+                    word2[i] = c;
+                    c = fgetc(fp);
+                    i++;
+                }
+                word2[i] = ' ';
+                //printf("%s", word2);
+                if(strcmp(word,word2) == 0)
+                     return 1;
+
+                memset(word2, 0, 50);
+           }
+        }
+
+        c = fgetc(fp);
+    }
+    //printf("%ld ", ftell(fp));
+    return 0;
+}
+
+int checkForRepeatedWords2(char *word, FILE *fp){
+    char c, word2[100];
+    int i;
+
+    fseek(fp, 0, SEEK_SET);
+    //printf("%ld", ftell(fp)); 
+    //printf("%s", word);
+    while((c = fgetc(fp)) != EOF) {
+        i = 0;
+        //printf("%c", c);
+        while(c != '\n') {
+            //printf("%c", c);
+            word2[i] = c;
+            c = fgetc(fp);
+            i++;
+        } 
+        word2[i] = '\n';
+        //printf("\n"); 
+        //printf("%s ", word2);
+        if(strcmp(word, word2) == 0)
+            return 1;
+
+        memset(word2, 0, 100);
+    }
+        //printf("%ld", ftell(fp)); 
     return 0;
 }
 
