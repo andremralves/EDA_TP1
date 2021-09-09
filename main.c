@@ -25,8 +25,8 @@ int main()
     vector_string = NULL;
     char *file_name_tmp = "Nota1.txt";
     char *pword; // ponteiro para palavras recebidas da leitura do arquivo
-    FILE* pFileName = NULL; 
     char opt = '0'; // opção do menu
+    FILE* pFileName = NULL; 
     MAX_LEN_VECTOR = 0; // tamanho maximo do meu vetor inicia em 0
     LEN_QUEUE = 0; // tamanho do vetor de retorno tratadas
 
@@ -55,6 +55,7 @@ int main()
                 char opt_tmp;
                 scanf("%c",&opt_tmp);
                 if(opt_tmp == 'Y' || opt_tmp == 'y'){
+                    DelFiles(); 
                     printf("\n");
                     if(GenFiles(pFileName))
                         fclose(pFileName);

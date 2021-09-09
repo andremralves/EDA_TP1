@@ -9,5 +9,6 @@ int ReadFile(FILE *file_name, char* pword);
 bool WriteTxtFiles(char* Text, char Num_file);
 bool SplitByRate(FILE *Arquivo_csv);
 int GenFiles(FILE* pFileName);
+void DelFiles();
 #endif
 
