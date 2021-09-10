@@ -5,12 +5,15 @@
 #include <math.h>
 
 void menu() {
-    printf("\n|~~~~~~~~~~~~~~~~MENU~~~~~~~~~~~~~~~~|\n");
-    printf("| 1 - Ler o dataset do Trip Advisor  |\n");
-    printf("| 2 - Gerar vocabulario              |\n");
-    printf("| 3 - Gerar todos os TF-IDFs         |\n");
-    printf("| 0 - Sair                           |\n");
-    printf("|~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~|\n\n");
+    printf("\n|~~~~~~~~~~~~~~~~~~~~~~~~~MENU~~~~~~~~~~~~~~~~~~~~~~~~~|\n");
+    printf("| 1 - Ler o dataset do Trip Advisor e separar nos      |\n");
+    printf("|     arquivos Nota1, Nota2, Nota3, Nota4 e Nota5      |\n");
+    printf("| 2 - Gerar vocabulario em vocabulary.txt              |\n");
+    printf("| 3 - Gerar todos os TF-IDFs em allTFIDF.csv           |\n");
+    printf("| 4 - Printar TF-IDF em ordem decrescente              |\n");
+    printf("| 0 - Sair                                             |\n");
+    printf("| Obs: os arquivos gerados estão na pasta /files       |\n");
+    printf("|~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~|\n\n");
     printf("Escolha uma opcao do menu: ");
 }
 
@@ -28,17 +31,24 @@ int main() {
     FILE *allTFIDF = NULL;
 
     //case2
-    
     char c;
     char word[100];
     int i, count = 0;
     long int filePos;
+
+    //case3
+    
+    char str[200];
+    double wordCountN1, wordCountN2, wordCountN3, wordCountN4, wordCountN5, nWordsN1, nWordsN2, nWordsN3, nWordsN4, nWordsN5;
+    double nDocWithWord;
+    double TF_IDF1, TF_IDF2, TF_IDF3, TF_IDF4, TF_IDF5, IDF, TF1, TF2, TF3, TF4, TF5, x;
 
     do {
         menu();
         scanf("%d", &menuNum);
         switch (menuNum) {
             case 1:
+                printf("-> ./files/reviews.csv\n");
                 printf("Digite o nome do arquivo: ");
                 scanf("%s", fileName); //../files/reviews.csv
 
@@ -56,20 +66,21 @@ int main() {
                 Nota5 = fopen("./files/Nota5.txt", "w");
 
                 sortByRating(Reviews, Nota1, Nota2, Nota3, Nota4, Nota5);
+
+                printf("Arquivos Nota1.txt, Nota2.txt, Nota3.txt, Nota4.txt e Nota5.txt foram gerados com sucesso!\n");
                 break;
             case 2:
-                /*char c;
-                char word[100];
-                int i, count = 0;
-                long int filePos;*/
 
+                printf("Adicionando o vocabulario no arquivo vocabulary.txt");
                 if(Reviews != NULL) 
                     fclose(Reviews);
+                
+                if(vocabulary != NULL)
+                    fclose(vocabulary);
 
                 Reviews = fopen("./files/reviews.csv", "r");
                 vocabulary = fopen("./files/vocabulary.txt", "w+");
 
-                printf("Adicionando o vocabulario no arquivo vocabulary.txt");
                 while((c = fgetc(Reviews)) != EOF) {
                     if(c == '"') {
                         while((c = fgetc(Reviews)) != '"') {
@@ -104,10 +115,6 @@ int main() {
                 //Gerar vocabulario
                 break;
             case 3:
-                char str[200];
-                int wordCountN1, wordCountN2, wordCountN3, wordCountN4, wordCountN5, nWordsN1, nWordsN2, nWordsN3, nWordsN4, nWordsN5;
-                double nDocWithWord;
-                double TF_IDF1, TF_IDF2, TF_IDF3, TF_IDF4, TF_IDF5, IDF, TF1, TF2, TF3, TF4, TF5, x; 
                 if(vocabulary != NULL)
                     fclose(vocabulary);
 
@@ -133,7 +140,7 @@ int main() {
                 nWordsN4 = numberOfWordsInFile(Nota4);
                 nWordsN5 = numberOfWordsInFile(Nota5);
 
-                printf("Vocabulario    Nota1    Nota2    Nota3    Nota4    Nota5\n"); 
+                printf("Gerando o arquivo dos TF-IDFs...\n"); 
                 fputs("Vocabulario,Nota1,Nota2,Nota3,Nota4,Nota5\n", allTFIDF);
                 while((c = fgetc(vocabulary)) != EOF) {
                     i = 0;
@@ -165,7 +172,8 @@ int main() {
                     
                     if(nDocWithWord == 0)
                         nDocWithWord = 1;
-
+                    
+                    //calcula o TF-IDF
                     x = 5.0/nDocWithWord; 
                     IDF = log10(x); 
                     TF1 = wordCountN1/nWordsN1;
@@ -180,9 +188,7 @@ int main() {
                     TF_IDF4 = TF4 * IDF;
                     TF_IDF5 = TF5 * IDF;
 
-                    printf("%lf | %d | %d | %.10lf | %.10lf | %.10lf\n",nDocWithWord, wordCountN1, nWordsN1, TF1, IDF, TF_IDF1);
-                     
-                    sprintf(str, "\"%s\",%.15lf,%.15lf,%.15lf,%.15lf,%.15lf\n", word, TF_IDF1, TF_IDF2, TF_IDF3, TF_IDF4, TF_IDF5);
+                    sprintf(str, "\"%s\",%.10lf,%.10lf,%.10lf,%.10lf,%.10lf\n", word, TF_IDF1, TF_IDF2, TF_IDF3, TF_IDF4, TF_IDF5);
 
                     fputs(str, allTFIDF);
                     //printf("%s  |  %d\n", word, wordCountN1);
@@ -192,12 +198,33 @@ int main() {
 
                 break;
             case 4:
-                //Exibir TF-IDF de uma Nota. Em ordem decrescente de valor de TF-IDF
-                //Usuário deve informar qual TF-IDF a ser visualizado (da nota 1,2,3,4 ou 5).
-                // Vide formato na Tabela 2.
-                break;
-            case 5:
-                //Exibir TF-IDFs. Vide formato na Tabela 1.
+
+                if(allTFIDF != NULL)
+                    fclose(allTFIDF);
+
+                allTFIDF = fopen("./files/allTFIDF.csv", "r");
+               
+                printf("-> nota1, nota2, nota3, nota4 ou nota5\n");
+                printf("Digite o TF-IDF a ser visualizado: ");
+                scanf("%s", fileName);
+                if(strcmp(fileName, "nota1") == 0) { 
+                    sortTFIDF(allTFIDF, 1);
+                    break;
+                } else if(strcmp(fileName, "nota2") == 0) {
+                    sortTFIDF(allTFIDF, 2);
+                    break;
+                } else if(strcmp(fileName, "nota3") == 0) {
+                    sortTFIDF(allTFIDF, 3);
+                    break;
+                } else if(strcmp(fileName, "nota4") == 0) {
+                    sortTFIDF(allTFIDF, 4);
+                    break;
+                } else if(strcmp(fileName, "nota5") == 0) {
+                    sortTFIDF(allTFIDF, 5);
+                    break;
+                } else
+                    printf("Entrada inválida\n"); 
+
                 break;
             case 0:
                 break;

@@ -23,4 +23,6 @@ int checkForRepeatedWords2(char *word, FILE *fp);
 
 int sortByRating(FILE *Reviews, FILE *Nota1, FILE *Nota2, FILE *Nota3, FILE *Nota4, FILE *Nota5);
 
+int sortTFIDF(FILE *fp, int notaNum);
+
 #endif //EDA_TP1_FILEMANAGER_H

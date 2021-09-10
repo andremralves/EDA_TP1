@@ -3,6 +3,8 @@
     //
 #include <stdio.h>
 #include <string.h>
+#include <malloc.h>
+#include <stdlib.h>
 #include "fileManager.h"
 
 FILE *openFile(char *filename) {
@@ -197,5 +199,85 @@ int sortByRating(FILE *Reviews, FILE *Nota1, FILE *Nota2, FILE *Nota3, FILE *Not
         c = fgetc(Reviews); //anda para o proximo caractere
     }
     memset(buff, 0, 20000);
+    return 0;
+}
+
+int countLinesTFIDF(FILE *TF_IDFfile) {
+    int count = -1;
+    char c;
+    
+    fseek(TF_IDFfile, 0, SEEK_SET);
+    while((c = fgetc(TF_IDFfile)) != EOF) {
+        if(c == '\n')
+            count++;
+    }
+    return count;
+}
+
+
+struct WordTFIDF {
+    char word[100];
+    char tfidf[20];
+};
+
+int structCompare(const void* s1, const void* s2) {
+    
+    struct WordTFIDF *n1 = (struct WordTFIDF *)s1;
+    struct WordTFIDF *n2 = (struct WordTFIDF *)s2;
+    int tfidfCompare = strcmp(n1->tfidf, n2->tfidf);
+    return -tfidfCompare;
+}
+
+
+int sortTFIDF(FILE *fp, int notaNum) {
+    char c;
+    int i, j =0, numLines, numWords;
+
+    numLines = countLinesTFIDF(fp);
+
+    struct WordTFIDF *NotaX;
+    
+    NotaX = (struct WordTFIDF *) malloc(sizeof(char) * 120 * numLines);
+    
+    fseek(fp, 0, SEEK_SET);
+
+    printf("Escolha quantas palavras você deseja mostrar: ");
+    scanf("%d", &numWords);
+    printf("\nPalavra | TF-IDF\n");
+
+    while((c = fgetc(fp)) != EOF) {
+        //printf("%c", c);
+        if(c == '"') {
+            i = 0;
+            c = fgetc(fp);
+            //printf("%c", c);
+            while(c != '"') {
+                //printf("%c", c);
+                NotaX[j].word[i] = c;
+                c = fgetc(fp);
+                i++;
+            }
+
+            for(i=0; i<notaNum; i++) {
+                c = fgetc(fp);
+                c = fgetc(fp);
+            }
+            
+            for(i = 0; i < 12; i++) { 
+                NotaX[j].tfidf[i] = c;
+                c = fgetc(fp);
+            }
+            //printf("%s\n", NotaX[j].tfidf);
+            j++; 
+        }
+    } 
+    
+    qsort(NotaX, numLines, sizeof(struct WordTFIDF), structCompare);
+
+    for(i = 0; i < numWords; i++) {
+        printf("%s | %s\n", NotaX[i].word, NotaX[i].tfidf);
+    }
+
+    free(NotaX);
     return 0;
 }
