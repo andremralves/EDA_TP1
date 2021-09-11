@@ -13,10 +13,16 @@ int isNumber(char c);
 
 int isEndWord(char c);
 
-int countWordCharInFile(FILE *fileName);
+int countCharsInFile(FILE *fileName);
 
-int checkForRepeatedWords(char *word, char*wordArray); 
+int wordCountInFile(char *word, FILE *fp);
+
+int numberOfWordsInFile(FILE *fp);
+
+int checkForRepeatedWords2(char *word, FILE *fp);
 
 int sortByRating(FILE *Reviews, FILE *Nota1, FILE *Nota2, FILE *Nota3, FILE *Nota4, FILE *Nota5);
+
+int sortTFIDF(FILE *fp, int notaNum);
 
 #endif //EDA_TP1_FILEMANAGER_H

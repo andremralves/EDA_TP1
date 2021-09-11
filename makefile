@@ -1,2 +1,2 @@
 main: main.c fileManager.c
-	gcc -Wextra -o main main.c fileManager.c -I.
+	gcc -Wextra -g -o main main.c fileManager.c -I. -lm
