@@ -257,12 +257,35 @@ int sortTFIDF(FILE *fp, int notaNum) {
                 c = fgetc(fp);
                 i++;
             }
-
-            for(i=0; i<notaNum; i++) {
-                c = fgetc(fp);
-                c = fgetc(fp);
-            }
             
+            c = fgetc(fp);
+
+            switch(notaNum) {
+                case 1:
+                    c = fgetc(fp);
+                    break;
+                case 2:
+                    for(i=0; i<14; i++) {
+                        c = fgetc(fp);
+                    }
+                    break;
+                case 3:
+                    for(i=0; i<27; i++) {
+                        c = fgetc(fp);
+                    }
+                    break;
+                case 4:
+                    for(i=0; i<40; i++) {
+                        c = fgetc(fp);
+                    }
+                    break;
+                case 5:
+                    for(i=0; i<53; i++) {
+                        c = fgetc(fp);
+                    }
+                    break;
+            } 
+                    
             for(i = 0; i < 12; i++) { 
                 NotaX[j].tfidf[i] = c;
                 c = fgetc(fp);
